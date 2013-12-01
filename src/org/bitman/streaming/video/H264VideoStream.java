@@ -109,6 +109,7 @@ public class H264VideoStream extends MediaStream {
 	 */
 	public void setPreferences(SharedPreferences prefs) {
 		mSettings = prefs;
+		Log.i(TAG, "mSettings is setted!");
 	}
 
 	/**
@@ -117,7 +118,7 @@ public class H264VideoStream extends MediaStream {
 	 */
 	public synchronized  String generateSessionDescription() throws IllegalStateException, IOException {
 		String[] s = mSettings.getString("h264"+mQuality.framerate+","+mQuality.resX+","+mQuality.resY, "").split(",");
-		
+		Log.i(TAG, "s.length = "+s.length);
 		return "m=video "+String.valueOf(getDestinationPorts()[0])+" RTP/AVP 96\r\n" +
 		"a=rtpmap:96 H264/90000\r\n" +
 		"a=fmtp:96 packetization-mode=1;profile-level-id="+s[0]+";sprop-parameter-sets="+s[1]+","+s[2]+";\r\n";
