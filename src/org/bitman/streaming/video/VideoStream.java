@@ -263,7 +263,7 @@ public abstract class VideoStream extends MediaStream {
 
 	}
 
-	public synchronized void stopPreview() {
+	private synchronized void stopPreview() {
 
 		if (mStreaming) super.stop();
 
