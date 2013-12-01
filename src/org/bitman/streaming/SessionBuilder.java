@@ -6,9 +6,8 @@ import java.net.InetAddress;
 import java.net.SocketException;
 
 import org.bitman.demeter.http.HttpServer;
-import org.bitman.streaming.video.H264Stream;
 import org.bitman.streaming.video.VideoQuality;
-import org.bitman.streaming.video.VideoStream;
+import org.bitman.streaming.video.H264VideoStream;
 
 import android.R.integer;
 import android.content.Context;
@@ -79,7 +78,7 @@ public class SessionBuilder {
 		switch (mVideoEncoder) {
 
 		case VIDEO_H264:
-			H264Stream stream = new H264Stream(mCamera);
+			H264VideoStream stream = new H264VideoStream(mCamera);
 			if (mContext!=null) 
 				stream.setPreferences(PreferenceManager.getDefaultSharedPreferences(mContext));
 			session.addVideoTrack(stream);
@@ -87,7 +86,7 @@ public class SessionBuilder {
 		}
 
 		if (session.getVideoTrack()!=null) {
-			VideoStream video = session.getVideoTrack();
+			H264VideoStream video = session.getVideoTrack();
 			video.setVideoQuality(VideoQuality.merge(mVideoQuality,video.getVideoQuality()));
 			video.setPreviewDisplay(mSurfaceHolder);
 

@@ -10,9 +10,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.bitman.streaming.MediaStream;
+import org.bitman.streaming.rtp.H264Packetizer;
 import org.bitman.streaming.rtp.MediaCodecInputStream;
 
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.graphics.ImageFormat;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
@@ -30,9 +32,9 @@ import android.view.SurfaceHolder.Callback;
 /** 
  * Don't use this class directly.
  */
-public abstract class VideoStream extends MediaStream {
+public class H264VideoStream extends MediaStream {
 
-	protected final static String TAG = "VideoStream";
+	protected final static String TAG = "H264VideoStream";
 
 	protected VideoQuality mQuality = VideoQuality.DEFAULT_VIDEO_QUALITY.clone();
 	protected SurfaceHolder.Callback mSurfaceHolderCallback = null;
@@ -48,7 +50,7 @@ public abstract class VideoStream extends MediaStream {
 	 * Don't use this class directly.
 	 * Uses CAMERA_FACING_BACK by default.
 	 */
-	public VideoStream() {
+	public H264VideoStream() {
 		this(CameraInfo.CAMERA_FACING_BACK);
 	}	
 
@@ -56,9 +58,15 @@ public abstract class VideoStream extends MediaStream {
 	 * Don't use this class directly
 	 * @param camera Can be either CameraInfo.CAMERA_FACING_BACK or CameraInfo.CAMERA_FACING_FRONT
 	 */
-	public VideoStream(int camera) {
+	public H264VideoStream(int camera) {
 		super();
 		setCamera(camera);
+		setVideoEncoder(MediaRecorder.VideoEncoder.H264);
+		try {
+			mPacketizer = new H264Packetizer();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -113,8 +121,8 @@ public abstract class VideoStream extends MediaStream {
 				@Override
 				public void surfaceDestroyed(SurfaceHolder holder) {
 					mSurfaceReady = false;
-					if (VideoStream.this.mStreaming) {
-						VideoStream.this.stop();
+					if (H264VideoStream.this.mStreaming) {
+						H264VideoStream.this.stop();
 						Log.d(TAG,"Surface destroyed: video streaming stopped.");
 					}
 					if (mCamera != null) stopPreview();
@@ -389,7 +397,27 @@ public abstract class VideoStream extends MediaStream {
 
 	}*/
 
-	public abstract String generateSessionDescription() throws IllegalStateException, IOException;
+	private SharedPreferences mSettings = null;
+	
+	/**
+	 * Some data (SPS and PPS params) needs to be stored when {@link #generateSessionDescription()} is called 
+	 * @param prefs The SharedPreferences that will be used to save SPS and PPS parameters
+	 */
+	public void setPreferences(SharedPreferences prefs) {
+		mSettings = prefs;
+	}
+
+	/**
+	 * Returns a description of the stream using SDP. It can then be included in an SDP file.
+	 * Will fail if called when streaming.
+	 */
+	public synchronized  String generateSessionDescription() throws IllegalStateException, IOException {
+		String[] s = mSettings.getString("h264"+mQuality.framerate+","+mQuality.resX+","+mQuality.resY, "").split(",");
+		
+		return "m=video "+String.valueOf(getDestinationPorts()[0])+" RTP/AVP 96\r\n" +
+		"a=rtpmap:96 H264/90000\r\n" +
+		"a=fmtp:96 packetization-mode=1;profile-level-id="+s[0]+";sprop-parameter-sets="+s[1]+","+s[2]+";\r\n";
+	}
 
 	/** Verifies if streaming using the MediaCodec API is feasable. */
 	@SuppressLint("NewApi")

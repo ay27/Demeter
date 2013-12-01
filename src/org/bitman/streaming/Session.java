@@ -3,7 +3,7 @@ package org.bitman.streaming;
 import java.io.IOException;
 import java.net.InetAddress;
 
-import org.bitman.streaming.video.VideoStream;
+import org.bitman.streaming.video.H264VideoStream;
 
 import android.content.Context;
 import android.net.wifi.WifiManager;
@@ -28,7 +28,7 @@ public class Session {
 	private Context mContext = null;
 	private WifiManager.MulticastLock mLock = null;
 
-	private VideoStream mVideoStream = null;
+	private H264VideoStream mVideoStream = null;
 
 	/** 
 	 * Creates a streaming session that can be customized by adding tracks.
@@ -56,7 +56,7 @@ public class Session {
 
 
 	
-	public void addVideoTrack(VideoStream track) {
+	public void addVideoTrack(H264VideoStream track) {
 		mVideoStream = track;
 	}
 
@@ -66,7 +66,7 @@ public class Session {
 	}
 
 
-	public VideoStream getVideoTrack() {
+	public H264VideoStream getVideoTrack() {
 		return mVideoStream;
 	}	
 	
