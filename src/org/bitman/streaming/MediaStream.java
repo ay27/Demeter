@@ -190,7 +190,8 @@ public abstract class MediaStream implements Stream {
 
 	/** Stops the stream. */
 	@SuppressLint("NewApi")
-	public synchronized  void stop() {
+	public
+	synchronized  void stop() {
 		if (mStreaming) {
 			mPacketizer.stop();
 			try {
