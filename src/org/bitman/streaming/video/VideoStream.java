@@ -141,12 +141,12 @@ public abstract class VideoStream extends MediaStream {
 	 * @param width Width of the stream
 	 * @param height height of the stream
 	 */
-	public void setVideoSize(int width, int height) {
+	/*public void setVideoSize(int width, int height) {
 		if (mQuality.resX != width || mQuality.resY != height) {
 			mQuality.resX = width;
 			mQuality.resY = height;
 		}
-	}
+	}*/
 
 	/** 
 	 * Modifies the framerate of the stream. You can call this method at any time 
@@ -154,11 +154,11 @@ public abstract class VideoStream extends MediaStream {
 	 * {@link #setVideoQuality(VideoQuality)} may be more convenient.
 	 * @param rate Framerate of the stream
 	 */	
-	public void setVideoFramerate(int rate) {
+	/*public void setVideoFramerate(int rate) {
 		if (mQuality.framerate != rate) {
 			mQuality.framerate = rate;
 		}
-	}
+	}*/
 
 	/** 
 	 * Modifies the bitrate of the stream. You can call this method at any time 
@@ -166,11 +166,11 @@ public abstract class VideoStream extends MediaStream {
 	 * {@link #setVideoQuality(VideoQuality)} may be more convenient.
 	 * @param bitrate Bitrate of the stream in bit per second
 	 */	
-	public void setVideoEncodingBitrate(int bitrate) {
+	/*public void setVideoEncodingBitrate(int bitrate) {
 		if (mQuality.bitrate != bitrate) {
 			mQuality.bitrate = bitrate;
 		}
-	}
+	}*/
 
 	/** 
 	 * Modifies the quality of the stream. You can call this method at any time 
@@ -199,13 +199,13 @@ public abstract class VideoStream extends MediaStream {
 
 	/** Stops the stream. */
 	public synchronized void stop() {
-		if (mMode == MODE_STREAMING_JB) {
+		/*if (mMode == MODE_STREAMING_JB) {
 			mCamera.setPreviewCallback(null);
-		}
+		}*/
 		super.stop();
-		if (mMode == MODE_STREAMING_LEGACY) {
+		//if (mMode == MODE_STREAMING_LEGACY) {
 			lockCamera();
-		}
+		//}
 		if (!mCameraOpenedManually) {
 			stopPreview();
 		}
@@ -238,12 +238,12 @@ public abstract class VideoStream extends MediaStream {
 
 			Parameters parameters = mCamera.getParameters();
 
-			if (mMode == MODE_STREAMING_JB) {
+			/*if (mMode == MODE_STREAMING_JB) {
 				getClosestSupportedQuality(parameters);
 				parameters.setPreviewFormat(ImageFormat.YV12);
 				parameters.setPreviewSize(mQuality.resX, mQuality.resY);
 				parameters.setPreviewFrameRate(mQuality.framerate);
-			}
+			}*/
 
 			try {
 			mCamera.setParameters(parameters);
@@ -285,9 +285,9 @@ public abstract class VideoStream extends MediaStream {
 	 * This will also open the camera and dispay the preview if {@link #startPreview()}
 	 * has not laready been called.
 	 */
-	public synchronized void start() throws IllegalStateException, IOException {
+	/*public synchronized void start() throws IllegalStateException, IOException {
 		super.start();
-	}
+	}*/
 
 	/**
 	 * Encoding of the audio/video is done by a MediaRecorder.
@@ -337,7 +337,7 @@ public abstract class VideoStream extends MediaStream {
 	/**
 	 * Encoding of the audio/video is done by a MediaCodec.
 	 */
-	@SuppressLint({ "InlinedApi", "NewApi" })
+	/*@SuppressLint({ "InlinedApi", "NewApi" })
 	protected void encodeWithMediaCodec() throws RuntimeException, IOException {
 
 		// Opens the camera if needed
@@ -387,7 +387,7 @@ public abstract class VideoStream extends MediaStream {
 			throw new IOException("Something happened with the local sockets :/ Start failed !");
 		}
 
-	}
+	}*/
 
 	public abstract String generateSessionDescription() throws IllegalStateException, IOException;
 

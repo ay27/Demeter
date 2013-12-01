@@ -37,7 +37,7 @@ public abstract class MediaStream implements Stream {
 	private int mSocketId;
 
 	protected boolean mStreaming = false;
-	protected int mMode = MODE_STREAMING_LEGACY;
+	//protected int mMode = MODE_STREAMING_LEGACY;
 	protected static int sSuggestedMode = MODE_STREAMING_LEGACY; 
 
 	private LocalServerSocket mLss = null;
@@ -58,9 +58,9 @@ public abstract class MediaStream implements Stream {
 		}
 	}
 	
-	public MediaStream() {
+	/*public MediaStream() {
 		mMode = sSuggestedMode;
-	}
+	}*/
 
 	/** 
 	 * Sets the destination ip address of the stream.
@@ -136,9 +136,9 @@ public abstract class MediaStream implements Stream {
 	 * If the mode is set to {@link #MODE_STREAMING_LEGACY}, video is forwarded to a UDP socket.
 	 * @param mode Either {@link #MODE_STREAMING_LEGACY} or {@link #MODE_STREAMING_JB} 
 	 */
-	public void setMode(int mode) {
+	/*public void setMode(int mode) {
 		this.mMode = mode;
-	}
+	}*/
 
 	/**
 	 * Returns the packetizer associated with the {@link MediaStream}.
@@ -174,15 +174,17 @@ public abstract class MediaStream implements Stream {
 
 		if (mRtpPort<=0 || mRtcpPort<=0)
 			throw new IllegalStateException("No destination ports set for the stream !");
+		
+		encodeWithMediaRecorder();
 
-		switch (mMode) {
+		/*switch (mMode) {
 		case MODE_STREAMING_LEGACY: 
 			encodeWithMediaRecorder(); 
 			break;
 		case MODE_STREAMING_JB: 
 			encodeWithMediaCodec();
 			break;
-		};
+		};*/
 		
 	}
 
@@ -192,16 +194,16 @@ public abstract class MediaStream implements Stream {
 		if (mStreaming) {
 			mPacketizer.stop();
 			try {
-				if (mMode==MODE_STREAMING_LEGACY) {
+				//if (mMode==MODE_STREAMING_LEGACY) {
 					mMediaRecorder.stop();
 					mMediaRecorder.release();
 					mMediaRecorder = null;
 					closeSockets();
-				} else {
+				/*} else {
 					mMediaCodec.stop();
 					mMediaCodec.release();
 					mMediaCodec = null;
-				}
+				}*/
 			} catch (Exception ignore) {}	
 			mStreaming = false;
 		}
@@ -209,7 +211,7 @@ public abstract class MediaStream implements Stream {
 
 	protected abstract void encodeWithMediaRecorder() throws IOException;
 	
-	protected abstract void encodeWithMediaCodec() throws IOException;
+	//protected abstract void encodeWithMediaCodec() throws IOException;
 	
 	/**
 	 * Returns the SSRC of the underlying {@link org.bitman.streaming.rtp.RtpSocket}.
